@@ -1,0 +1,71 @@
+Android Debug Bridge(adb) 
+https://developer.android.com/studio/command-line/adb
+
+$ adb tcpip 5555
+$ adb connect 192.168.1.85:5555
+$ adb devices
+List of devices attached
+192.168.1.85:5555       device
+$ adb kill-server (Stop the adb server)
+$ adb devices -l
+
+Google Android Emulator
+$ sudo apt install google-android-emulator-installer
+$ emulator -list-avds
+Pixel_4_XL_API_29
+$ adb kill-server
+$ emulator -avd Pixel_4_XL_API_29 -port 5557
+$ adb start-server
+$ adb devices 
+List of devices attached
+emulator-5557   device
+
+Send commands into Emulator to install an app
+$ adb -s emulator-5557 install helloWorld.apk
+
+Set up port forwarding
+$ adb -s emulator-5557 forward tcp:6100 tcp:7100
+$ adb -s emulator-5557 forward tcp:6100 local:logd
+$ adb -s emulator-5557 reverse tcp:8545 tcp:8545
+
+Copy files to/from a device
+$ adb -s emulator-5557 pull remote local
+$ adb -s emulator-5557 pull /sdcard/screen01.png .
+$ adb -s emulator-5557 push local remote
+$ adb -s emulator-5557 push foo.txt /sdcard/foo.txt
+$ adb -s emulator-5557 shell ls /sdcard
+
+Call activity manager(am)
+$ adb -s emulator-5557 shell am start -a android.intent.action.VIEW
+
+Call package manager(pm)
+$ adb -s emulator-5557 shell pm uninstall com.example.MyApp
+
+Call device policy manager(dpm)
+$ adb -s emulator-5557 shell dpm command
+
+Take a screenshot
+$ adb -s emulator-5557 shell screencap /sdcard/screen01.png
+$ adb -s emulator-5557 shell
+generic_x86:/ $ screencap /sdcard/screen02.png
+generic_x86:/ $ exit
+$ adb -s emulator-5557 pull /sdcard/screen02.png
+
+Record a video
+$ adb -s emulator-5557 shell screenrecord /sdcard/demo01.mp4
+$ adb -s emulator-5557 shell
+generic_x86:/ $ screenrecord --verbose /sdcard/demo01.mp4
+(press Control + C to stop)
+generic_x86:/ $ exit
+$ adb pull /sdcard/demo01.mp4d
+
+Read ART(Android Runtime) profiles for apps
+$ adb -s emulator-5557 shell cmd package dump-profiles package
+$ adb -s emulator-5557 pull /data/misc/profman/package.txt
+
+Reset test devices
+$ adb -s emulator-5557 shell cmd testharness enable
+
+sqlite
+$ adb -s emulator-5557 shell
+$ sqlite3 /data/data/com.example.app/databases/rssitems.db
